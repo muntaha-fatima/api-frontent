@@ -439,12 +439,7 @@ export async function login(email: string, password: string): Promise<void> {
     window.location.href = "/stores"; // ✅ Redirect on success
   }
 }
-
-export async function registerAdmin(
-  _name: string,
-  _passwordConfirm: string,
-  _token: string
-) {
+ 
 }
 export async function getCurrentUser(token: string): Promise<AuthUser> {
   const res = await fetch(`https://coupon-app-backend.vercel.app/api/auth/me`, {
