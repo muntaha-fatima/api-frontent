@@ -125,9 +125,6 @@ export async function deleteStore(id: string, token: string) {
 //   return res.data;
 // }
 
-
-
-
 export type Coupon = {
   _id: string
   offerDetails: string
@@ -160,32 +157,59 @@ export type CreateCouponInput = {
 
 export async function fetchCoupons(): Promise<Coupon[]> {
   const res = await fetch(`https://coupon-app-backend.vercel.app/api/coupons`)
-  if (!res.ok) throw new Error('Failed to fetch coupons')
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Failed to fetch coupons')
+  }
   const json = await res.json()
   return json.data
 }
 
 export async function createCoupon(data: CreateCouponInput, token: string) {
+  if (!token) throw new Error('No token provided')
+
+  const payload = {
+    offerDetails: data.offerDetails,
+    code: data.code,
+    store: data.store,
+    active: data.active ?? false,
+    isValid: data.isValid ?? false,
+    featuredForHome: data.featuredForHome ?? false,
+    expirationDate: data.expirationDate
+  }
+
   const res = await fetch(`https://coupon-app-backend.vercel.app/api/coupons`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(payload)
   })
-  if (!res.ok) throw new Error('Failed to create coupon')
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Failed to create coupon')
+  }
+
   return res.json()
 }
 
 export async function deleteCoupon(id: string, token: string) {
+  if (!token) throw new Error('No token provided')
+
   const res = await fetch(`https://coupon-app-backend.vercel.app/api/coupons/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
-  if (!res.ok) throw new Error('Failed to delete coupon')
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Failed to delete coupon')
+  }
+
   return true
 }
 
@@ -193,8 +217,14 @@ export async function trackCoupon(id: string) {
   const res = await fetch(`https://coupon-app-backend.vercel.app/api/coupons/${id}/track`, {
     method: 'POST'
   })
-  if (!res.ok) throw new Error('Failed to track coupon')
-  return true
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Failed to track coupon')
+  }
+
+  const json = await res.json().catch(() => ({}))
+  return json.data || true
 }
 
 // ---------------------
