@@ -438,54 +438,9 @@ export async function login(email: string, password: string): Promise<void> {
   if (typeof window !== "undefined") {
     window.location.href = "/stores"; // ✅ Redirect on success
   }
-}
- 
-}
-export async function getCurrentUser(token: string): Promise<AuthUser> {
-  const res = await fetch(`https://coupon-app-backend.vercel.app/api/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  if (!res.ok) throw new Error('Failed to fetch user')
-  const json = await res.json()
-  return json.data.user
+
+
 }
 
-export async function forgotPassword(email: string) {
-  const res = await fetch(`https://coupon-app-backend.vercel.app/api/auth/forgot-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email })
-  })
-  if (!res.ok) throw new Error('Failed to send reset email')
-  return res.json()
-}
 
-export async function resetPassword(token: string, password: string, passwordConfirm: string) {
-  const res = await fetch(`https://coupon-app-backend.vercel.app/api/auth/reset-password/${token}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password, passwordConfirm })
-  })
-  if (!res.ok) throw new Error('Failed to reset password')
-  return res.json()
-}
 
-export async function updatePassword(
-  token: string,
-  currentPassword: string,
-  newPassword: string,
-  passwordConfirm: string
-) {
-  const res = await fetch(`https://coupon-app-backend.vercel.app/api/auth/update-password`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ currentPassword, newPassword, passwordConfirm })
-  })
-  if (!res.ok) throw new Error('Failed to update password')
-  return res.json()
-}
