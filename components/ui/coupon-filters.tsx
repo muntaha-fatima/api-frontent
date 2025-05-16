@@ -38,7 +38,7 @@ export function CouponFilters() {
     [currentStore, isActive, isValid, isFeatured]
   );
 
- useEffect(() => {
+useEffect(() => {
   const abortController = new AbortController();
 
   const getStores = async () => {
@@ -50,11 +50,15 @@ export function CouponFilters() {
         return;
       }
 
-      const data = await fetchStores(abortController.signal); // ✅ PLACE IT HERE
-      setStores(data); // ✅ Update state with fetched stores
-    } catch (err: any) {
-      if (err.name === "AbortError") return;
-      toast.error(err?.message || "Failed to fetch stores");
+      const data = await fetchStores(abortController.signal);
+      setStores(data);
+    } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Failed to fetch stores");
+      }
     } finally {
       setStoresLoading(false);
     }
