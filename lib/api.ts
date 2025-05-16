@@ -1,8 +1,5 @@
 
 const BASE_URL = "https://coupon-app-backend.vercel.app/api";
-const COUPONS_API = `${BASE_URL}/coupons`;
-const CATEGORIES_API = `${BASE_URL}/categories`;
-const AUTH_API = `${BASE_URL}/auth`;
 const STORES_API = `${BASE_URL}/stores`;
 
 // ---------------------
@@ -90,18 +87,6 @@ export async function deleteStore(id: string, token: string) {
   });
   return await res.json();
 }
-const handleDelete = async (id: string) => {
-  const token = localStorage.getItem("token");
-  if (!token) return;
-
-  try {
-    await deleteStore(id, token);
-    const updated = await fetchStores();
-    setStores(updated); // ✅ This line updates UI
-  } catch (error) {
-    console.error("Error deleting store:", error);
-  }
-};
 
 
 // ---------------------
@@ -456,18 +441,10 @@ export async function login(email: string, password: string): Promise<void> {
 }
 
 export async function registerAdmin(
-  name: string,
-  email: string,
-  password: string,
-  passwordConfirm: string,
-  token: string
+  _name: string,
+  _passwordConfirm: string,
+  _token: string
 ) {
- const res = await fetch("/api/auth/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email, password }),
-});
-const data = await res.json();
 }
 export async function getCurrentUser(token: string): Promise<AuthUser> {
   const res = await fetch(`https://coupon-app-backend.vercel.app/api/auth/me`, {
@@ -516,7 +493,4 @@ export async function updatePassword(
   })
   if (!res.ok) throw new Error('Failed to update password')
   return res.json()
-}
-function setStores(updated: any) {
-  throw new Error("Function not implemented.");
 }

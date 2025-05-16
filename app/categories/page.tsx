@@ -1,6 +1,6 @@
 // app/categories/page.tsx
 import { fetchCategories } from "../../lib/api";
-
+import Image from "next/image";
 export default async function CategoryPage() {
   const data = await fetchCategories();
   const categories = data.categories;
@@ -17,7 +17,7 @@ export default async function CategoryPage() {
             <li key={cat._id} className="border p-4 rounded shadow-sm">
               <div className="flex items-center space-x-3">
                 {cat.icon && (
-                  <img src={cat.icon} alt={cat.name} className="w-8 h-8 object-contain" />
+                  <Image src={cat.icon} alt={cat.name} className="w-8 h-8 object-contain" />
                 )}
                 <div>
                   <h2 className="text-lg font-semibold">{cat.name}</h2>

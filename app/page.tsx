@@ -5,7 +5,6 @@ import {
   fetchCoupons,
   createCoupon,
   deleteCoupon,
-  trackCoupon,
   type Coupon,
   type CreateCouponInput
 } from '@/lib/api'
